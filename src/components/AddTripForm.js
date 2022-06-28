@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { currencies } from "../global_data/currencyData";
+import useFetch from "../hooks/useFetch";
 
 const AddTripForm = (props) => {
   const [currency, setCurrency] = useState("");
@@ -19,6 +20,8 @@ const AddTripForm = (props) => {
   const [budget, setBudget] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+
+  const { error, sendRequest: addTrip } = useFetch();
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -31,6 +34,16 @@ const AddTripForm = (props) => {
       endDate,
     };
     console.log(trip);
+
+    addTrip({
+      url: "http://localhost:8080/user",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      params: { userId: 2 },
+      body: trip,
+    });
 
     setName("");
     setBudget("");

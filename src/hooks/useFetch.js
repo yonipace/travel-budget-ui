@@ -1,27 +1,33 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
-const useFetch = (url, params, applyData, method, headers) => {
-  const [loading, setLoading] = useState(false);
-  let response;
-  url += "?" + new URLSearchParams(params).toString();
+const useFetch = () => {
+  const [error, setError] = useState(null);
 
-  const getTrips = async () => {
-    const response = await fetch(url, {
-      headers: { "Content-Type": "application/json" },
-    });
-    if (response.ok) {
-      const data = await response.json();
-    } else {
-      const err = await response.json();
-      throw new Error(err.message);
+  const sendRequest = useCallback(async (confidObj, applyData) => {
+    console.log(confidObj.url ? confidObj.url : "url undefined");
+    let url = confidObj.url;
+    if (confidObj.params) {
+      url += "?" + new URLSearchParams(confidObj.params);
     }
-  };
+    const response = await fetch(url, {
+      method: confidObj.method ? confidObj.method : "GET",
+      headers: confidObj.headers ? confidObj.headers : {},
+      body: confidObj.body ? JSON.stringify(confidObj.body) : null,
+    });
+    console.log(url);
+    if (!response.ok) {
+      const err = await response.json();
+      setError(new Error(err.message));
+    }
+    const data = await response.json();
+    applyData(data);
+  }, []);
 
-  getTrips();
+  sendRequest();
 
   return {
-    response,
-    loading,
+    error,
+    sendRequest,
   };
 };
 

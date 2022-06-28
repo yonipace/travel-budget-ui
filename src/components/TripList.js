@@ -1,16 +1,44 @@
-import { Container, Fab, Tooltip } from "@mui/material";
-import React from "react";
+import { Container, Fab, Tooltip, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import TripCard from "./TripCard";
 import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
+import useFetch from "../hooks/useFetch";
+import EmptyListCard from "./EmptyListCard";
 
 const TripList = (props) => {
+  const [trips, setTrips] = useState([]);
+
+  const { error, sendRequest: getTripData } = useFetch();
+  useEffect(() => {
+    const updateTrips = (tripsObj) => {
+      setTrips(tripsObj);
+    };
+    getTripData(
+      {
+        url: "http://localhost:8080/user",
+        params: { userId: 2 },
+      },
+      updateTrips
+    );
+  }, [getTripData]);
+
+  if (trips.length > 0) {
+    trips.map((trip) => <TripCard data={trip} key={trip.id} />);
+  }
+
   return (
-    <div>
+    <>
       <Container sx={{ mt: 10 }}>
-        {props.trips.map((trip) => (
-          <TripCard data={trip} key={trip.id} />
-        ))}
+        {trips.length > 0 ? (
+          trips.map((trip) => <TripCard data={trip} key={trip.id} />)
+        ) : (
+          <EmptyListCard
+            title="No Trips Found"
+            text="add your first trip"
+            addTrip={props.handleAddTrip}
+          />
+        )}
       </Container>
       <Tooltip title="add new trip">
         <Fab
@@ -23,7 +51,7 @@ const TripList = (props) => {
           <AddIcon />
         </Fab>
       </Tooltip>
-    </div>
+    </>
   );
 };
 
