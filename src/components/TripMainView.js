@@ -9,9 +9,10 @@ import {
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ExpenseList from "./ExpenseList";
 import AddExpenseForm from "./AddExpenseForm";
+import MenuDrawer from "./MenuDrawer";
 
 const TripMainView = () => {
   const [openAddExpense, setOpenAddExpense] = useState(false);
@@ -27,9 +28,7 @@ const TripMainView = () => {
     <div>
       <AppBar sx={{ bgcolor: "primary.dark" }}>
         <Toolbar>
-          <IconButton sx={{ color: "inherit" }}>
-            <MenuIcon />
-          </IconButton>
+          <MenuDrawer />
           <Typography variant="h5" sx={{ mx: 1 }}>
             Rome 2022
           </Typography>

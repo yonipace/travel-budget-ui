@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Card,
+  CardMedia,
   Container,
   Grid,
   Link,
@@ -9,18 +10,25 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 
-const Login = () => {
+const SignUp = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const customer = {
+      firstName,
+      lastName,
       email,
       password,
     };
 
+    setFirstName("");
+    setLastName("");
     setEmail("");
     setPassword("");
   };
@@ -33,14 +41,21 @@ const Login = () => {
           sx={{
             mt: 3,
             mb: 3,
+            p: 1,
             alignItems: "center",
             display: "flex",
             flexDirection: "column",
             color: "primary.main",
           }}
         >
-          <h2>Travel Budget Application</h2>
-          <h3>Login</h3>
+          <CardMedia
+            component="img"
+            height="200"
+            image={process.env.PUBLIC_URL + "logo-cut.jpg"}
+          />
+          <Typography variant="h4" sx={{ m: 1 }}>
+            <strong>Sign Up</strong>
+          </Typography>
         </Card>
       </Container>
 
@@ -66,6 +81,24 @@ const Login = () => {
             }}
           >
             <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <TextField
+                  label="First Name"
+                  variant="outlined"
+                  fullWidth
+                  onChange={(e) => setFirstName(e.target.value)}
+                  value={firstName}
+                ></TextField>
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  label="Last Name"
+                  variant="outlined"
+                  fullWidth
+                  onChange={(e) => setLastName(e.target.value)}
+                  value={lastName}
+                ></TextField>
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   label="Email"
@@ -94,11 +127,11 @@ const Login = () => {
               variant="contained"
               sx={{ mt: 3 }}
             >
-              Login
+              Sign Up
             </Button>
           </Box>
-          <Link to="/login" underline="hover">
-            fisrt time? click here to sign up
+          <Link component={RouterLink} to="/login" underline="hover">
+            Already have an account? click here to login
           </Link>
         </Card>
       </Container>
@@ -106,4 +139,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;

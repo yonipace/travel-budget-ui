@@ -31,11 +31,11 @@ const TripCard = (props) => {
                 budget: <strong>{props.data.budget}</strong>
               </Typography>
               <Typography variant="subtitle1">
-                spent: <strong>{props.data.total_spent}</strong>
+                spent: <strong>{props.data.totalSpent}</strong>
               </Typography>
             </Stack>
             <Typography variant="subtitle2">
-              {props.data.start_date} - {props.data.end_date}
+              {props.data.startDate} - {props.data.endDate}
             </Typography>
           </Stack>
         </CardContent>

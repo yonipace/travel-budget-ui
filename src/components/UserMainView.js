@@ -4,42 +4,75 @@ import {
   CardHeader,
   Container,
   CssBaseline,
+  Divider,
+  Drawer,
   Fab,
   IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   Stack,
   Toolbar,
   Tooltip,
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import FlightIcon from "@mui/icons-material/Flight";
+import LogoutIcon from "@mui/icons-material/Logout";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import TripList from "./TripList";
 import AddTripForm from "./AddTripForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import MenuDrawer from "./MenuDrawer";
+import useFetch from "../hooks/useFetch";
 
 const UserMainView = () => {
   const [openAddTrip, setOpenAddTrip] = useState(false);
+  const [trips, setTrips] = useState([]);
 
+  /*  useEffect(() => {
+    const getTrips = async () => {
+      const response = await fetch("http://localhost:8080/user?userId=1", {
+        headers: { "Content-Type": "application/json" },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setTrips(data);
+      } else {
+        const err = await response.json();
+        throw new Error(err.message);
+      }
+    }; 
+    
+    getTrips().catch((error) => console.log(error.message));
+  }, []);
+  */
   const addTripHandler = () => {
     setOpenAddTrip(true);
   };
   const cancelAddTripHandler = () => {
     setOpenAddTrip(false);
   };
-
+  const { response, loading } = useFetch("http://localhost:8080/user", {
+    userId: 1,
+  });
+  useEffect(() => {
+    console.log(response);
+  }, []);
   return (
     <div>
       <AppBar sx={{ bgcolor: "primary.dark" }}>
         <Toolbar>
-          <IconButton sx={{ color: "inherit" }}>
-            <MenuIcon />
-          </IconButton>
+          <MenuDrawer />
           <Typography variant="h6" sx={{ mx: 1 }}>
             Welcome!
           </Typography>
         </Toolbar>
       </AppBar>
       {!openAddTrip && (
-        <TripList trips={dummyTrips} handleAddTrip={addTripHandler} />
+        <TripList trips={trips} handleAddTrip={addTripHandler} />
       )}
       {openAddTrip && <AddTripForm handleCancel={cancelAddTripHandler} />}
     </div>
