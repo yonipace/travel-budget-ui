@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { currencies } from "../global_data/currencyData";
 import useFetch from "../hooks/useFetch";
 
@@ -33,7 +33,6 @@ const AddTripForm = (props) => {
       startDate,
       endDate,
     };
-    console.log(trip);
 
     addTrip({
       url: "http://localhost:8080/user",

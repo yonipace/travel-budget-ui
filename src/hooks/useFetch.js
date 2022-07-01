@@ -4,7 +4,7 @@ const useFetch = () => {
   const [error, setError] = useState(null);
 
   const sendRequest = useCallback(async (confidObj, applyData) => {
-    console.log(confidObj.url ? confidObj.url : "url undefined");
+    console.log("useFetch");
     let url = confidObj.url;
     if (confidObj.params) {
       url += "?" + new URLSearchParams(confidObj.params);
