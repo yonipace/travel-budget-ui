@@ -9,22 +9,41 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { useRef } from "react";
+import { Link as RouterLink, useHistory } from "react-router-dom";
+import useFetch from "../hooks/useFetch";
+import { useDispatch } from "react-redux";
+import { login } from "../reducers/authSlice";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const { error, sendRequest: sendLogin } = useFetch();
+  const dispatch = useDispatch();
+  const setAuthData = (response) => {
+    dispatch(login(response));
+  };
+  const history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const customer = {
-      email,
-      password,
+    const user = {
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
     };
 
-    setEmail("");
-    setPassword("");
+    sendLogin(
+      {
+        url: "http://localhost:8080/login",
+        body: JSON.stringify(user),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+      setAuthData
+    );
+    history.push("/user");
   };
 
   return (
@@ -35,7 +54,7 @@ const Login = () => {
           sx={{
             mt: 3,
             mb: 3,
-            p: 1,
+            p: 2,
             alignItems: "center",
             display: "flex",
             flexDirection: "column",
@@ -44,31 +63,16 @@ const Login = () => {
         >
           <CardMedia
             component="img"
-            height="200"
-            image={process.env.PUBLIC_URL + "logo-cut.jpg"}
+            height="300"
+            image={process.env.PUBLIC_URL + "travel-logo-min.png"}
+            sx={{ borderRadius: "10px" }}
           />
-          <Typography variant="h4" sx={{ m: 1 }}>
-            <strong>Login</strong>
-          </Typography>
-        </Card>
-      </Container>
-
-      <Container maxWidth="xs">
-        <Card
-          elevation={3}
-          sx={{
-            p: 2,
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
           <Box
             component="form"
             noValidate
             onSubmit={handleSubmit}
             sx={{
-              p: 3,
+              py: 3,
               alignItems: "center",
               display: "flex",
               flexDirection: "column",
@@ -81,8 +85,7 @@ const Login = () => {
                   variant="outlined"
                   type="email"
                   fullWidth
-                  onChange={(e) => setEmail(e.target.value)}
-                  value={email}
+                  inputRef={emailRef}
                 ></TextField>
               </Grid>
               <Grid item xs={12}>
@@ -91,8 +94,7 @@ const Login = () => {
                   variant="outlined"
                   type="password"
                   fullWidth
-                  onChange={(e) => setPassword(e.target.value)}
-                  value={password}
+                  inputRef={passwordRef}
                 ></TextField>
               </Grid>
             </Grid>

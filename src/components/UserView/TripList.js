@@ -1,13 +1,15 @@
-import { Container, Fab, Tooltip, Typography } from "@mui/material";
+import { Container, Fab, Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TripCard from "./TripCard";
 import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
-import useFetch from "../hooks/useFetch";
-import EmptyListCard from "./EmptyListCard";
+import useFetch from "../../hooks/useFetch";
+import EmptyListCard from "../Layout/EmptyListCard";
+import { useSelector } from "react-redux";
 
 const TripList = (props) => {
   const [trips, setTrips] = useState([]);
+  const token = useSelector((state) => state.authentication.token);
 
   const { error, sendRequest: getTripData } = useFetch();
   useEffect(() => {
@@ -17,11 +19,13 @@ const TripList = (props) => {
     getTripData(
       {
         url: "http://localhost:8080/user",
-        params: { userId: 2 },
+        headers: {
+          token: token,
+        },
       },
       updateTrips
     );
-  }, [getTripData]);
+  }, [getTripData, token]);
 
   if (trips.length > 0) {
     trips.map((trip) => <TripCard data={trip} key={trip.id} />);

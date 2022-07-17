@@ -1,12 +1,14 @@
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import TripList from "./TripList";
 import AddTripForm from "./AddTripForm";
-import { useEffect, useState } from "react";
-import MenuDrawer from "./MenuDrawer";
-import useFetch from "../hooks/useFetch";
+import { useState } from "react";
+import MenuDrawer from "../Layout/MenuDrawer";
+import { useSelector } from "react-redux";
 
 const UserMainView = () => {
   const [openAddTrip, setOpenAddTrip] = useState(false);
+  const firstName = useSelector((state) => state.authentication.firstName);
+  const lastName = useSelector((state) => state.authentication.lastName);
 
   const addTripHandler = () => {
     setOpenAddTrip(true);
@@ -17,11 +19,11 @@ const UserMainView = () => {
 
   return (
     <div>
-      <AppBar sx={{ bgcolor: "primary.dark" }}>
+      <AppBar>
         <Toolbar>
           <MenuDrawer />
           <Typography variant="h6" sx={{ mx: 1 }}>
-            Welcome!
+            {firstName} {lastName}
           </Typography>
         </Toolbar>
       </AppBar>

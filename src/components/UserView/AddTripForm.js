@@ -10,52 +10,58 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import FastfoodIcon from "@mui/icons-material/Fastfood";
-import RestaurantIcon from "@mui/icons-material/Restaurant";
-import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
-import HealthAndSafetyIcon from "@mui/icons-material/HealthAndSafety";
-import HotelIcon from "@mui/icons-material/Hotel";
-import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
-import FlightIcon from "@mui/icons-material/Flight";
-import TollIcon from "@mui/icons-material/Toll";
-import { currencies } from "../global_data/currencyData";
+import { currencies } from "../../model/currencyData";
+import useFetch from "../../hooks/useFetch";
+import { useSelector } from "react-redux";
 
-const AddExpenseForm = (props) => {
-  const [category, setCategory] = useState("");
-  const [title, setTitle] = useState("");
-  const [note, setNote] = useState("");
-  const [price, setPrice] = useState("");
+const AddTripForm = (props) => {
+  const token = useSelector((state) => state.authentication.token);
+
   const [currency, setCurrency] = useState("");
-  const [date, setDate] = useState("");
+  const [name, setName] = useState("");
+  const [destination, setDestination] = useState("");
+  const [budget, setBudget] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const { error, sendRequest: addTrip } = useFetch();
 
   const submitHandler = (e) => {
     e.preventDefault();
-
-    const expense = {
-      title,
-      note,
-      price,
+    const trip = {
+      name,
+      budget,
+      destination,
       currency,
-      category,
-      date,
+      startDate,
+      endDate,
     };
-    console.log(expense);
 
-    setTitle("");
-    setNote("");
-    setPrice("");
-    setDate("");
-    setCategory("");
-    setCurrency("");
+    addTrip({
+      url: "http://localhost:8080/user",
+      headers: {
+        "Content-Type": "application/json",
+        token,
+      },
+      method: "POST",
+      body: JSON.stringify(trip),
+    });
+
+    // setName("");
+    // setBudget("");
+    // setDestination("");
+    // setStartDate("");
+    // setEndDate("");
+    // setCurrency("");
   };
 
   return (
     <div>
       <Container maxWidth="sm">
-        <Card sx={{ maxWidth: "sm", p: 3, mt: 20 }}>
+        <Card sx={{ maxWidth: "sm", p: 3, mt: 10 }}>
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="h6" sx={{ color: "primary.main" }}>
-              enter expense details
+              enter trip details
             </Typography>
             <Button
               size="small"
@@ -66,41 +72,40 @@ const AddExpenseForm = (props) => {
               cancel
             </Button>
           </Stack>
-          <Box component="form" noValidate onSubmit={submitHandler}>
+          <Box component="form" onSubmit={submitHandler}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <TextField
-                  label="Title"
+                  label="Trip Name"
                   variant="standard"
                   fullWidth
                   onChange={(e) => {
-                    setTitle(e.target.value);
+                    setName(e.target.value);
                   }}
-                  value={title}
+                  value={name}
                 ></TextField>
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  label="Note"
+                  label="Destination"
                   variant="standard"
                   fullWidth
                   onChange={(e) => {
-                    setNote(e.target.value);
+                    setDestination(e.target.value);
                   }}
-                  value={note}
+                  value={destination}
                 ></TextField>
               </Grid>
-
               <Grid item xs={6}>
                 <TextField
                   fullWidth
                   select
                   label="Currency"
                   variant="standard"
-                  value={currency}
                   onChange={(e) => {
                     setCurrency(e.target.value);
                   }}
+                  value={currency}
                 >
                   {currencies.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -111,37 +116,34 @@ const AddExpenseForm = (props) => {
               </Grid>
               <Grid item xs={6}>
                 <TextField
-                  label="Price"
+                  label="Budget"
                   variant="standard"
                   type="number"
                   fullWidth
                   onChange={(e) => {
-                    setPrice(e.target.value);
+                    setBudget(e.target.value);
                   }}
-                  value={price}
+                  value={budget}
                 ></TextField>
               </Grid>
               <Grid item xs={6}>
                 <TextField
-                  select
-                  label="Category"
+                  label="Start Date"
                   variant="standard"
+                  type="date"
                   fullWidth
-                  value={category}
-                  onChange={(e) => {
-                    setCategory(e.target.value);
+                  InputLabelProps={{
+                    shrink: true,
                   }}
-                >
-                  {categories.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.value.toLowerCase()}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                  onChange={(e) => {
+                    setStartDate(e.target.value);
+                  }}
+                  value={startDate}
+                ></TextField>
               </Grid>
               <Grid item xs={6}>
                 <TextField
-                  label="Date"
+                  label="End Date"
                   variant="standard"
                   type="date"
                   InputLabelProps={{
@@ -149,20 +151,20 @@ const AddExpenseForm = (props) => {
                   }}
                   fullWidth
                   onChange={(e) => {
-                    setDate(e.target.value);
+                    setEndDate(e.target.value);
                   }}
-                  value={date}
+                  value={endDate}
                 ></TextField>
               </Grid>
             </Grid>
             <Button
-              type="submit"
-              size="large"
               fullWidth
+              size="large"
+              type="submit"
               variant="contained"
               sx={{ mt: 3 }}
             >
-              Add Expense
+              Add Trip
             </Button>
           </Box>
         </Card>
@@ -171,39 +173,4 @@ const AddExpenseForm = (props) => {
   );
 };
 
-export default AddExpenseForm;
-
-const categories = [
-  {
-    value: "FOOD",
-    icon: <FastfoodIcon />,
-  },
-  {
-    value: "FLIGHT",
-    icon: <FlightIcon />,
-  },
-  {
-    value: "TICKETS",
-    icon: <ConfirmationNumberIcon />,
-  },
-  {
-    value: "HOTEL",
-    icon: <HotelIcon />,
-  },
-  {
-    value: "INSURANCE",
-    icon: <HealthAndSafetyIcon />,
-  },
-  {
-    value: "SHOPPING",
-    icon: <ShoppingBasketIcon />,
-  },
-  {
-    value: "RESTAURANT",
-    icon: <RestaurantIcon />,
-  },
-  {
-    value: "TAXES",
-    icon: <TollIcon />,
-  },
-];
+export default AddTripForm;

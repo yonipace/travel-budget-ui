@@ -1,14 +1,13 @@
 import "./App.css";
 import { CssBaseline } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import UserMainView from "./components/UserMainView";
-import TripMainView from "./components/TripMainView";
 import { Route, Switch } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import AddTripForm from "./components/AddTripForm";
-import Profile from "./components/Profile";
+import Profile from "./pages/Profile";
+import UserMainView from "./components/UserView/UserMainView";
+import TripMainView from "./components/TripView/TripMainView";
 
 const theme = createTheme({
   palette: {
@@ -20,7 +19,7 @@ const theme = createTheme({
       main: "#F04B19",
     },
     background: {
-      default: "#01A247",
+      default: "#d5d5d5",
     },
   },
 });

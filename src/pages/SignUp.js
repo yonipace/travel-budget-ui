@@ -39,42 +39,25 @@ const SignUp = () => {
         <Card
           elevation={3}
           sx={{
-            mt: 3,
-            mb: 3,
-            p: 1,
+            p: 2,
+            my: 2,
             alignItems: "center",
             display: "flex",
             flexDirection: "column",
-            color: "primary.main",
           }}
         >
           <CardMedia
             component="img"
-            height="200"
-            image={process.env.PUBLIC_URL + "logo-cut.jpg"}
+            height="300"
+            image={process.env.PUBLIC_URL + "travel-logo-min.png"}
+            sx={{ borderRadius: "10px" }}
           />
-          <Typography variant="h4" sx={{ m: 1 }}>
-            <strong>Sign Up</strong>
-          </Typography>
-        </Card>
-      </Container>
-
-      <Container maxWidth="xs">
-        <Card
-          elevation={3}
-          sx={{
-            p: 2,
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
           <Box
             component="form"
             noValidate
             onSubmit={handleSubmit}
             sx={{
-              p: 3,
+              py: 3,
               alignItems: "center",
               display: "flex",
               flexDirection: "column",
