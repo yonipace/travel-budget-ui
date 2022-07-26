@@ -10,29 +10,14 @@ const TripMainView = () => {
   const token = useSelector((state) => state.authentication.token);
   const tripId = useSelector((state) => state.trip.trip.id);
   const [expenses, setExpenses] = useState([]);
-  const [isFormOpen, setIsFormOpen] = useState(false);
 
   const { error, loading, sendRequest: getExpenseList } = useFetch();
 
-  const handleFormOpen = () => {
-    setIsFormOpen(true);
-  };
-  const handleFormClose = () => {
-    sendRequest();
+  const handleDialogClose = () => {
+    updateExpenseList();
   };
 
-  const formState = {
-    isFormOpen,
-    openForm: handleFormOpen,
-    closeForm: handleFormClose,
-    setIsOpen: setIsFormOpen,
-  };
-
-  const sendRequest = useCallback(() => {
-    const updateExpenses = (expenseList) => {
-      console.log("updating expenses...");
-      setExpenses(expenseList);
-    };
+  const updateExpenseList = useCallback(() => {
     getExpenseList(
       {
         url: "http://localhost:8080/trip",
@@ -41,13 +26,16 @@ const TripMainView = () => {
         },
         params: { tripId: tripId },
       },
-      updateExpenses
+      (expenseList) => {
+        console.log("updating expenses...");
+        setExpenses(expenseList);
+      }
     );
   }, [getExpenseList, token, tripId]);
 
   useEffect(() => {
-    sendRequest();
-  }, [sendRequest, getExpenseList, token, tripId]);
+    updateExpenseList();
+  }, [updateExpenseList, getExpenseList, token, tripId]);
 
   return (
     <div>
@@ -55,9 +43,9 @@ const TripMainView = () => {
       <ExpenseList
         expenses={expenses}
         loading={loading}
-        formState={formState}
+        onClose={handleDialogClose}
       />
-      {/* <AddExpense formState={formState} /> */}
+      <AddExpense onClose={handleDialogClose} />
     </div>
   );
 };

@@ -16,14 +16,17 @@ import { useDispatch } from "react-redux";
 import { login } from "../reducers/authSlice";
 
 const Login = () => {
+  const { error, loading, sendRequest: sendLogin } = useFetch();
+  const history = useHistory();
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { error, sendRequest: sendLogin } = useFetch();
   const dispatch = useDispatch();
   const setAuthData = (response) => {
     dispatch(login(response));
+    history.push("/user");
   };
-  const history = useHistory();
+
+  const isError = error ? true : false;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -43,7 +46,6 @@ const Login = () => {
       },
       setAuthData
     );
-    history.push("/user");
   };
 
   return (
@@ -78,6 +80,9 @@ const Login = () => {
               flexDirection: "column",
             }}
           >
+            <Typography color="error" size="large" sx={{ mb: 2 }}>
+              {error ? error.message : ""}
+            </Typography>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -86,6 +91,7 @@ const Login = () => {
                   type="email"
                   fullWidth
                   inputRef={emailRef}
+                  error={isError}
                 ></TextField>
               </Grid>
               <Grid item xs={12}>
@@ -95,6 +101,7 @@ const Login = () => {
                   type="password"
                   fullWidth
                   inputRef={passwordRef}
+                  error={isError}
                 ></TextField>
               </Grid>
             </Grid>
@@ -103,9 +110,12 @@ const Login = () => {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3 }}
+              disabled={loading}
+              sx={{
+                mt: 3,
+              }}
             >
-              Login
+              {loading ? "Logging In..." : "Log In"}
             </Button>
           </Box>
           <Link component={RouterLink} to="/signup" underline="hover">

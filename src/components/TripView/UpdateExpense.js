@@ -6,15 +6,14 @@ import { useState } from "react";
 const UpdateExpense = (props) => {
   const [open, setOpen] = useState(false);
 
-  const { openForm, closeForm } = props.formState;
-
   const handleOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    closeForm();
+    //updates the expense list after closing the form
+    props.onClose();
   };
 
   return (

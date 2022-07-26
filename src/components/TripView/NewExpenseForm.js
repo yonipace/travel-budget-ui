@@ -1,4 +1,11 @@
-import { Box, Button, Grid, MenuItem, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  MenuItem,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useState, useRef } from "react";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
@@ -18,18 +25,12 @@ const NewExpenseForm = (props) => {
   const { error, loading, sendRequest: sendExpense } = useFetch();
   const [category, setCategory] = useState("");
   const [currency, setCurrency] = useState("");
+  const isError = error ? true : false;
 
   const titleRef = useRef();
   const noteRef = useRef();
   const priceRef = useRef();
   const dateRef = useRef();
-
-  /*
-  const [title, setTitle] = useState("");
-  const [note, setNote] = useState("");
-  const [price, setPrice] = useState("");
-  const [date, setDate] = useState("");
- */
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -58,14 +59,12 @@ const NewExpenseForm = (props) => {
       },
     });
 
-    /* 
-    setTitle("");
-    setNote("");
-    setPrice("");
-    setDate("");
+    titleRef.current.value = "";
+    noteRef.current.value = "";
+    priceRef.current.value = "";
+    dateRef.current.value = "";
     setCategory("");
     setCurrency("");
-    */
   };
 
   return (
@@ -87,7 +86,6 @@ const NewExpenseForm = (props) => {
             inputRef={noteRef}
           ></TextField>
         </Grid>
-
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
@@ -146,6 +144,7 @@ const NewExpenseForm = (props) => {
           ></TextField>
         </Grid>
       </Grid>
+
       <Button
         type="submit"
         size="large"
@@ -156,6 +155,10 @@ const NewExpenseForm = (props) => {
       >
         {loading ? props.text.loading : props.text.button}
       </Button>
+      <Typography color="error" size="large" sx={{ mx: 2, mb: 1 }}>
+        error message
+        {error ? error.message : ""}
+      </Typography>
     </Box>
   );
 };

@@ -4,28 +4,49 @@ const useFetch = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const sendRequest = useCallback(async (confidObj, applyData) => {
-    //run useFetch only if configObj is passed
-    if (confidObj) {
-      setLoading(true);
-      let url = confidObj.url;
-      if (confidObj.params) {
-        url += "?" + new URLSearchParams(confidObj.params);
-      }
-      const response = await fetch(url, {
-        method: confidObj.method ? confidObj.method : "GET",
-        headers: confidObj.headers ? confidObj.headers : {},
-        body: confidObj.body ? confidObj.body : null,
-      });
-      if (!response.ok) {
-        const err = await response.json();
-        setError(new Error(err.message));
-        console.log(error);
-      }
-      setLoading(false);
-      const data = await response.json();
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
 
-      data && applyData(data);
+  const NewAlert = {
+    showAlert,
+    alertSeverity,
+    alertMessage,
+  };
+
+  const sendRequest = useCallback(async (configObj, applyData) => {
+    //run useFetch only if configObj is passed
+    if (configObj) {
+      setLoading(true);
+      let url = configObj.url;
+      if (configObj.params) {
+        url += "?" + new URLSearchParams(configObj.params);
+      }
+
+      try {
+        const response = await fetch(url, {
+          method: configObj.method ? configObj.method : "GET",
+          headers: configObj.headers ? configObj.headers : {},
+          body: configObj.body ? configObj.body : null,
+        });
+
+        if (!response.ok) {
+          setLoading(false);
+          const err = await response.json();
+          setAlertMessage(err.message);
+          setAlertSeverity("error");
+          setShowAlert(true);
+          throw new Error(err.message);
+        }
+
+        if (response.ok) {
+          setLoading(false);
+          const data = await response.json();
+          applyData && applyData(data);
+        }
+      } catch (e) {
+        setError(e);
+      }
     }
   }, []);
 
@@ -35,6 +56,7 @@ const useFetch = () => {
     error,
     sendRequest,
     loading,
+    NewAlert,
   };
 };
 

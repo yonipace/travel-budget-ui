@@ -36,8 +36,6 @@ const UpdateExpenseForm = (props) => {
       date,
     };
 
-    console.log(expense);
-
     sendExpense({
       url: "http://localhost:8080/trip",
       body: JSON.stringify(expense),

@@ -8,11 +8,23 @@ import {
 } from "@mui/material";
 import ExpenseForm from "./NewExpenseForm";
 import AddIcon from "@mui/icons-material/Add";
+import { useState } from "react";
 
 const AddExpense = (props) => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    //updates the expense list after closing the form
+    props.onClose();
+  };
   return (
     <>
-      <Dialog onClose={props.formState.closeForm}>
+      <Dialog open={open} onClose={handleClose}>
         <DialogContent>
           <Container maxWidth="sm">
             <Box sx={{ maxWidth: "sm" }}>
@@ -32,7 +44,6 @@ const AddExpense = (props) => {
               </Typography>
             </Box>
             <ExpenseForm
-              closeForm={props.formState.closeForm}
               text={{
                 button: "Add Expense",
                 loading: "Adding...",
@@ -42,7 +53,7 @@ const AddExpense = (props) => {
         </DialogContent>
       </Dialog>
       <Fab
-        onClick={props.formState.openForm}
+        onClick={handleOpen}
         color="primary"
         sx={{ position: "fixed", bottom: 16, right: 20 }}
       >

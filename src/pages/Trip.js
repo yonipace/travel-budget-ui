@@ -15,12 +15,11 @@ import MenuDrawer from "../components/Layout/MenuDrawer";
 import EditIcon from "@mui/icons-material/Edit";
 import { useSelector } from "react-redux";
 
-const Profile = () => {
-  const email = useSelector((state) => state.authentication.email);
+const Trip = () => {
+  const trip = useSelector((state) => state.trip.trip);
   const firstName = useSelector((state) => state.authentication.firstName);
   const lastName = useSelector((state) => state.authentication.lastName);
   const fullName = firstName + " " + lastName;
-
   return (
     <div>
       <AppBar>
@@ -34,7 +33,7 @@ const Profile = () => {
       <Container sx={{ mt: 10 }}>
         <Card>
           <CardHeader
-            title={fullName}
+            title={trip.name}
             action={
               <IconButton>
                 <EditIcon />
@@ -44,20 +43,22 @@ const Profile = () => {
           <CardContent>
             <Stack spacing={1}>
               <Typography>
-                <strong>Email: </strong> {email}
+                <strong>Destination: </strong> {trip.destination}
+              </Typography>
+              <Typography>
+                <strong>Currency: </strong> {trip.currency}
+              </Typography>
+              <Typography>
+                <strong>Budget: </strong> {trip.budget}
+              </Typography>
+              <Typography>
+                <strong>Total Spent: </strong> {trip.totalSpent}
               </Typography>
 
               <Typography>
-                <strong>Trips: </strong>
+                <strong>Users: </strong>
               </Typography>
-              <Stack spacing={1} mt={1}>
-                {dummyTrips.map((trip) => (
-                  <>
-                    <Divider />
-                    <Typography variant="body2">{trip}</Typography>
-                  </>
-                ))}
-              </Stack>
+              <Stack spacing={1} mt={1}></Stack>
             </Stack>
           </CardContent>
         </Card>
@@ -66,6 +67,4 @@ const Profile = () => {
   );
 };
 
-const dummyTrips = ["Rome 2022", "Barcelona 2021", "India 2023"];
-
-export default Profile;
+export default Trip;

@@ -5,6 +5,7 @@ import {
   CardContent,
   CardHeader,
   Collapse,
+  Divider,
   IconButton,
   Stack,
   Typography,
@@ -20,6 +21,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
 import { blue, green, orange, purple, red, yellow } from "@mui/material/colors";
 import UpdateExpense from "./UpdateExpense";
+import DeleteExpense from "./DeleteExpense";
 
 const avatarColors = {
   electricity: yellow[700],
@@ -115,7 +117,7 @@ const ExpenseCard = (props) => {
           <CardContent>
             <Typography variant="subtitle1">{props.data.note}</Typography>
             <Typography variant="subtitle2">
-              Amount: {props.data.localAmount}{" "}
+              Amount: {props.data.localAmount}
             </Typography>
             <Typography variant="subtitle2">
               Currency: {props.data.localCurrencyCode}
@@ -123,10 +125,8 @@ const ExpenseCard = (props) => {
             <Typography variant="subtitle2">User: {props.data.user}</Typography>
           </CardContent>
           <CardActions>
-            <UpdateExpense expense={props.data} formState={props.formState} />
-            <IconButton>
-              <DeleteIcon />
-            </IconButton>
+            <UpdateExpense expense={props.data} onClose={props.onClose} />
+            <DeleteExpense expense={props.data} onClose={props.onClose} />
           </CardActions>
         </Stack>
       </Collapse>

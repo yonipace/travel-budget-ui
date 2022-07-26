@@ -11,7 +11,7 @@ const ExpenseList = (props) => {
               <ExpenseCard
                 data={expense}
                 key={expense.id}
-                formState={props.formState}
+                onClose={props.onClose}
               />
             ))}
       </Container>

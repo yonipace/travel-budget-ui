@@ -13,7 +13,7 @@ const TripAppBar = (props) => {
     <AppBar>
       <Toolbar>
         <MenuDrawer />
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" sx={{ flexGrow: 1 }}>
           {props.trip.name}
         </Typography>
       </Toolbar>
@@ -35,10 +35,11 @@ const TripAppBar = (props) => {
           mx={2}
         >
           <Typography component="div">
-            <strong> Remaining:</strong> {props.trip.budget}
+            <strong> Remaining: </strong>
+            {props.trip.budget - props.trip.totalSpent}
           </Typography>
           <Typography component="div">
-            <strong> Spent:</strong> {props.trip.budget}
+            <strong> Spent:</strong> {props.trip.totalSpent}
           </Typography>
         </Stack>
         <LinearProgress
@@ -54,8 +55,10 @@ const TripAppBar = (props) => {
         mx={2}
         my={1}
       >
-        <Typography variant="body2"> Rome, Italy</Typography>
-        <Typography variant="body2"> 01/10/22-15/10/22</Typography>
+        <Typography variant="body2"> {props.trip.destination}</Typography>
+        <Typography variant="body2">
+          {props.trip.startDate}-{props.trip.endDate}
+        </Typography>
       </Stack>
     </AppBar>
   );

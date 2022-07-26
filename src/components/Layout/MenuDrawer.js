@@ -7,28 +7,24 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import FlightIcon from "@mui/icons-material/Flight";
-import LogoutIcon from "@mui/icons-material/Logout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { menuList } from "./menuList";
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
+import { logout } from "../../reducers/authSlice";
 
 const MenuDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const list = [
-    { text: "Trips", icon: <FlightIcon />, link: "/user", action: null },
-    {
-      text: "Profile",
-      icon: <AccountCircleIcon />,
-      link: "/profile",
-      action: null,
-    },
-    { text: "Log Out", icon: <LogoutIcon />, link: "/login", action: null },
-  ];
+  const dispatch = useDispatch();
+  const trip = useSelector((state) => state.trip.trip);
+  const doLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <div>
@@ -52,10 +48,42 @@ const MenuDrawer = () => {
             </IconButton>
           </ListItem>
           <Divider />
-          {list.map((item) => (
+
+          <ListItem disablePadding>
+            {trip && (
+              <ListItemButton component={RouterLink} to="/trip">
+                <Typography
+                  sx={{ pr: 5, pl: 2, py: 1 }}
+                  variant="subheader"
+                  fontSize="large"
+                >
+                  <strong>{trip ? trip.name : ""}</strong>
+                </Typography>
+              </ListItemButton>
+            )}
+          </ListItem>
+
+          <ListItem disablePadding>
+            {trip && (
+              <ListItemButton
+                component={RouterLink}
+                to="/trip-details"
+                sx={{ pr: 5, py: 1 }}
+              >
+                <ListItemIcon>
+                  <MoreHorizIcon />
+                </ListItemIcon>
+                <ListItemText primary="Details" />
+              </ListItemButton>
+            )}
+          </ListItem>
+
+          <Divider />
+          {menuList.map((item) => (
             <ListItem disablePadding key={item.text}>
               <ListItemButton
-                sx={{ pr: 6, py: 1 }}
+                sx={{ pr: 5, py: 1 }}
+                onClick={item.text === "Log Out" ? doLogout : null}
                 component={RouterLink}
                 to={item.link}
               >

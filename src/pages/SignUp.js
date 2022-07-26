@@ -7,30 +7,50 @@ import {
   Grid,
   Link,
   TextField,
-  Typography,
 } from "@mui/material";
-import { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { useRef } from "react";
+import { Link as RouterLink, useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../reducers/authSlice";
+import useFetch from "../hooks/useFetch";
 
 const SignUp = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { error, loading, sendRequest: signup } = useFetch();
+  const dispatch = useDispatch();
+  const setAuthData = (response) => {
+    dispatch(login(response));
+  };
+  const history = useHistory();
+
+  const firstNameRef = useRef();
+  const lastNameRef = useRef();
+  const emailRef = useRef();
+  const passwordRef = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const customer = {
-      firstName,
-      lastName,
-      email,
-      password,
+
+    const user = {
+      firstName: firstNameRef.current.value,
+      lastName: lastNameRef.current.value,
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
     };
 
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setPassword("");
+    console.log(user);
+
+    signup(
+      {
+        url: "http://localhost:8080/signup",
+        body: JSON.stringify(user),
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+      setAuthData,
+      history.push("/user")
+    );
   };
 
   return (
@@ -69,8 +89,7 @@ const SignUp = () => {
                   label="First Name"
                   variant="outlined"
                   fullWidth
-                  onChange={(e) => setFirstName(e.target.value)}
-                  value={firstName}
+                  inputRef={firstNameRef}
                 ></TextField>
               </Grid>
               <Grid item xs={6}>
@@ -78,8 +97,7 @@ const SignUp = () => {
                   label="Last Name"
                   variant="outlined"
                   fullWidth
-                  onChange={(e) => setLastName(e.target.value)}
-                  value={lastName}
+                  inputRef={lastNameRef}
                 ></TextField>
               </Grid>
               <Grid item xs={12}>
@@ -88,8 +106,7 @@ const SignUp = () => {
                   variant="outlined"
                   type="email"
                   fullWidth
-                  onChange={(e) => setEmail(e.target.value)}
-                  value={email}
+                  inputRef={emailRef}
                 ></TextField>
               </Grid>
               <Grid item xs={12}>
@@ -98,8 +115,7 @@ const SignUp = () => {
                   variant="outlined"
                   type="password"
                   fullWidth
-                  onChange={(e) => setPassword(e.target.value)}
-                  value={password}
+                  inputRef={passwordRef}
                 ></TextField>
               </Grid>
             </Grid>
@@ -110,7 +126,7 @@ const SignUp = () => {
               variant="contained"
               sx={{ mt: 3 }}
             >
-              Sign Up
+              {loading ? "loading..." : "Sign Up"}
             </Button>
           </Box>
           <Link component={RouterLink} to="/login" underline="hover">

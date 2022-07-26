@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   token: "",
-  isLoggedIn: "false",
+  isLoggedIn: false,
   client: "",
   firstName: "",
   lastName: "",
@@ -14,7 +14,6 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
-      console.log(action.payload);
       state.isLoggedIn = true;
       state.token = action.payload.token;
       state.client = action.payload.client;
@@ -22,17 +21,15 @@ export const authSlice = createSlice({
       state.lastName = action.payload.lastName;
       state.email = action.payload.email;
     },
-    logout: (state) => {
-      state.isLoggedIn = false;
-      state.token = "";
-      state.client = "";
+    logout: (state, action) => {
+      //this method is used by the root reducer to set the app state when logging out
     },
   },
 });
 
-export const isLoggedIn = (state) => state.auth.isLoggedIn;
+export const isLoggedIn = (state) => state.authentication.isLoggedIn;
 export const token = (state) => state.auth.token;
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, clearState } = authSlice.actions;
 
 export default authSlice.reducer;
